@@ -1,21 +1,18 @@
-STASE has two major components:
-
-
+STASE has two major components. Follow the steps to install the required tools and dependencies.  These steps were tested on LLVM 14 and Ubuntu (22.04 LTS). 
 
 # 1. Rule-based Static Analysis
 
 ## Step-1: Install cclyzerpp & Souffle 
-STASE uses cclyzerpp+Souffle tool for rule-based static analysis. Follow [these steps](install_sa.md) to install cclyzerpp and Souffle. These steps were tested on LLVM 14 and Ubuntu (22.04 LTS). 
+STASE uses cclyzerpp and Souffle tools for rule-based static analysis. Follow [these steps](install_sa.md) to install cclyzerpp and Souffle.
 
-## Step-2: Clone Demo2 source code
+## Step-2: Clone edk2 source code
 ```
-cd stase-edk2
-git clone <Your edk2 repo> (Assuming the direcroty name will be edk2)
+git clone <Your edk2 repo> (Assuming the directory name will be edk2)
 cd edk2
 git submodule update --init
 ```
 
-## Step-3: Compile Demo2 source code with clang-14
+## Step-3: Compile source code with clang-14
 - In Conf/tools_def.txt, add the following flags “-flto -Xclang -disable-O0-optnone” At the end of line “NOOPT_CLANGPDB_X64_CC_FLAGS” option
 
 - Compile OvmfPkgX64 to generate .obj files
@@ -40,12 +37,11 @@ souffle --no-warn -j 32 -F ./<filename>_facts/ -D ./<filename>_analysis/ ./edk2-
 # 2. Guided Symbolic Execution
 
 ## Step-1: Install KLEE Symbolic Execution Engine 
-STASE uses KLEE as the underlying symbolic execution engine. Follow [these steps](install_klee.md) to install KLEE. These steps were tested on LLVM 13/14, Z3 constraint solver, and  Ubuntu (22.04 LTS and 23.10). 
-
-## Step-2: Clone edk2 source code inside stase-edk2 directory
+STASE uses KLEE as the underlying symbolic execution engine. Follow [these steps](install_klee.md) to install KLEE.
+## Step-2: Clone edk2 source code inside stase directory
 ```
 cd stase
-git clone <Your edk2 repo> (Assuming the direcroty name will be edk2)
+git clone <Your edk2 repo> (Assuming the directory name will be edk2)
 cd edk2
 cd ..
 ```
