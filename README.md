@@ -37,10 +37,6 @@ souffle --no-warn -j 32 -F ./<filename>_facts/ -D ./<filename>_analysis/ ./edk2-
 ```
 
 
-
-
-
-
 # 2. Guided Symbolic Execution
 
 ## Step-1: Install KLEE Symbolic Execution Engine 
@@ -48,7 +44,7 @@ STASE uses KLEE as the underlying symbolic execution engine. Follow [these steps
 
 ## Step-2: Clone edk2 source code inside stase-edk2 directory
 ```
-cd stase-edk2
+cd stase
 git clone <Your edk2 repo> (Assuming the direcroty name will be edk2)
 cd edk2
 cd ..
