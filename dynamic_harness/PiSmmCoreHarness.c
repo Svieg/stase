@@ -1,4 +1,4 @@
- #include "edk2/MdeModulePkg/Core/PiSmmCore/PiSmmCore.c"
+ #include "../edk2/MdeModulePkg/Core/PiSmmCore/PiSmmCore.c"
  verify_PiSmmCore()
  {
     EFI_HANDLE  DispatchHandle = NULL; // Initialize as needed

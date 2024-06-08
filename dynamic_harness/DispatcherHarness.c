@@ -1,4 +1,4 @@
- #include "demo2_edk2/MdeModulePkg/Core/PiSmmCore/Dispatcher.c"
+ #include "../edk2/MdeModulePkg/Core/PiSmmCore/Dispatcher.c"
 
  //
 // SMM Core Private Data structure that contains the data shared between
