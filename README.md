@@ -30,7 +30,7 @@ build -a X64 -b NOOPT -n 4 -d 2 -t CLANGPDB -p OvmfPkg/OvmfPkgX64.dsc -D NETWORK
 mkdir ./<filename>_facts
 mkdir ./<filename>_analysis
 factgen-exe --context-sensitivity 9-callsite ./bcfiles/<filename>.bc -o ./<filename>_facts/
-souffle --no-warn -j 32 -F ./<filename>_facts/ -D ./<filename>_analysis/ ./edk2-standalone.project
+souffle --no-warn -j 32 -F ./<filename>_facts/ -D ./<filename>_analysis/ ./edk2_dependence.project
 ```
 
 
