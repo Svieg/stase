@@ -88,6 +88,7 @@ klee --external-calls=all -libc=uclibc --posix-runtime --smtlib-human-readable  
 - dynamic_harness: Examples of Path Exploration Harnesses
 - stase_driver.c: STASE main
 - klee_driver.c: SymExec with ECH
+- edk2_dependence.project: Static analysis rule file
 
 
 
