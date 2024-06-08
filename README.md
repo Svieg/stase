@@ -84,10 +84,10 @@ klee --external-calls=all -libc=uclibc --posix-runtime --smtlib-human-readable  
 ```
 
 # Repository Structure
-static_harness.c: Environment Configuration Harness (ECH)
-dynamic_harness: Examples of Path Exploration Harnesses
-stase_driver.c: STASE main
-klee_driver.c: SymExec with ECH
+- static_harness.c: Environment Configuration Harness (ECH)
+- dynamic_harness: Examples of Path Exploration Harnesses
+- stase_driver.c: STASE main
+- klee_driver.c: SymExec with ECH
 
 
 
