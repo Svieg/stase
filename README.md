@@ -83,4 +83,11 @@ clang-13 -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone stase_driver.c
 klee --external-calls=all -libc=uclibc --posix-runtime --smtlib-human-readable  --write-test-info --write-paths --write-smt2s   --write-cov  --write-cvcs --write-kqueries   --write-sym-paths --only-output-states-covering-new --use-query-log=solver:smt2  --simplify-sym-indices stase_driver.bc
 ```
 
+# Repository Structure
+static_harness.c: Environment Configuration Harness (ECH)
+dynamic_harness: Examples of Path Exploration Harnesses
+stase_driver.c: STASE main
+klee_driver.c: SymExec with ECH
+
+
 
