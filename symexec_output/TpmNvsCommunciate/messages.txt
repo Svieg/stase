@@ -1,8 +1,0 @@
-KLEE: Using Z3 solver backend
-KLEE: Logging queries that reach solver in .smt2 format to /home/mdshafiuzzaman/Research/ISSTA24/Experiments/stase-edk2/klee-out-18/solver-queries.smt2
-
-KLEE: Deterministic allocator: Using quarantine queue size 8
-KLEE: Deterministic allocator: globals (start-address=0x738243200000 size=10 GiB)
-KLEE: Deterministic allocator: constants (start-address=0x737fc3200000 size=10 GiB)
-KLEE: Deterministic allocator: heap (start-address=0x727fc3200000 size=1024 GiB)
-KLEE: Deterministic allocator: stack (start-address=0x725fc3200000 size=128 GiB)

@@ -1,9 +1,0 @@
-array CommBufferSize[4] : w32 -> w8 = symbolic
-array command[4] : w32 -> w8 = symbolic
-(query [(Eq false
-             (Ult N0:(ZExt w64 (ReadLSB w32 0 CommBufferSize))
-                  16))
-         (Eq 3
-             (ReadLSB w32 0 command))
-         (Ult N0 48)]
-        false)

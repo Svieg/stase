@@ -1,7 +1,0 @@
-array CommBuffer[8] : w32 -> w8 = symbolic
-array CommBufferSize[8] : w32 -> w8 = symbolic
-(query [(Or (Eq 0
-                 (ReadLSB w64 0 CommBuffer))
-             (Eq 0
-                 (ReadLSB w64 0 CommBufferSize)))]
-        false)

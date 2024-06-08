@@ -1,7 +1,0 @@
-./dynamic_harness/../injected_edk2/injected_VariableSmm.c:703
-./dynamic_harness/../injected_edk2/injected_VariableSmm.c:704
-./dynamic_harness/../injected_edk2/injected_VariableSmm.c:705
-./edk2/MdeModulePkg/Universal/Variable/RuntimeDxe/TcgMorLockSmm.c:574
-./dynamic_harness/../edk2/MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLib.c:1023
-./dynamic_harness/../edk2/MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLib.c:1027
-./dynamic_harness/../edk2/MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLib.c:1122
