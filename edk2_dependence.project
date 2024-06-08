@@ -1,0 +1,1547 @@
+#include "/home/Downloads/cclyzerpp/cclyzerpp/datalog/debug.project"
+#include "/home/Downloads/testrules/utils/utils.dl"
+#include "/home/Downloads/testrules/utils/exports/utils-outputs.dl"
+
+.output subset.callgraph.reachable_load
+.output subset.callgraph.reachable_store
+
+//0. Debugging
+//.init utils = Utils
+
+//.output main_func
+
+
+//1. EDKII entry points
+main_func(Func) :-
+	func_name(Func, "@SmiHandlerProfileHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@SmmSwDispatcher"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@SmramProfileHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@PhysicalPresenceCallback"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@MemoryClearCallback"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@SmmDriverDispatchHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@SmmVariableHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@SmmLockBoxHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@SmmFaultTolerantWriteHandler"),
+	func(Func).
+
+
+main_func(Func) :-
+	func_name(Func, "@PiSmmCommunicationHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@BlSwSmiHandler"),
+	func(Func).
+
+
+main_func(Func) :-
+	func_name(Func, "@TpmNvsCommunciate"),
+	func(Func).
+
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmLegacyBootHandler"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmExitBootServicesHandler"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmS3EntryCallBack"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmReadyToBootHandler"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmReadyToLockHandler"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmEndOfDxeHandler"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmS3SmmInitDoneHandler"),
+   func(MainFn).
+
+main_func(MainFn) :-
+   func_name(MainFn, "@SmmEndOfS3ResumeHandler"),
+   func(MainFn).
+
+
+//Pixiefails
+main_func(Func) :-
+	func_name(Func, "@Dhcp6SeekStsOption"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@Dhcp6SendRequestMsg"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@Ip6ProcessRedirect"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@PxeBcRequestBootService"),
+	func(Func).
+
+
+
+
+//Harden entry points
+main_func(Func) :-
+	func_name(Func, "@RWVariableHandler"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@QueryVariableInfo"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@UnregisterCBFunctionLight"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@UnregisterCBFunctionHwAlarm"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@B2SmiDispatchHandle"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@Dhcp6HandleReplyMsg"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@PxeBcRequestBootService"),
+	func(Func).
+
+main_func(Func) :-
+	func_name(Func, "@PxeBcHandleDhcp6Offer"),
+	func(Func).
+
+
+
+
+
+
+argv_var_points_to(aCtx, argvAlloc, mainCtx, argvVar) :-
+  main_func(main),
+  argv_alloc(argvAlloc),
+  (
+    func_param(main, 0, argvVar);
+    func_param(main, 1, argvVar);
+	func_param(main, 2, argvVar)
+  ),
+  empty_alloc_context(aCtx),
+  main_context(mainCtx).
+
+
+
+
+//.decl temp_rel(?alloc: Allocation, ?size: Bytes)
+//.output temp_rel
+
+//temp_rel(?alloc, ?size) :-
+//	static_subobjects.input_allocation_size(?alloc, ?size).
+
+//1. Declarations
+//.type depgraphnode = basicblock { x : BasicBlock } | instruction { y : Instruction}
+.type BlockPath = [
+    head : BasicBlock,
+    tail : BlockPath
+]
+
+
+
+//2. Control Dependence Computations/Modifications
+
+//BasicBlock as node
+.decl node(?nodeblock: BasicBlock)
+.output node
+
+node(?nodeblock) :-
+	block(?nodeblock).
+
+
+//CFG with BasicBlock
+.decl controlflowgraph(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output controlflowgraph
+
+controlflowgraph(?srcblock, ?destblock) :-
+	block_predecessors(?destblock, ?srcblock).
+
+
+
+//Root BasicBlock
+.decl root(?rootblock: BasicBlock)
+.output root
+
+//a node without pred is root
+root(?rootblock) :-
+	controlflowgraph(?rootblock, _),
+	!controlflowgraph(_, ?rootblock).
+
+//a node without any edges is root
+root(?rootblock) :-
+	node(?rootblock),
+	!controlflowgraph(?rootblock, _),
+	!controlflowgraph(_, ?rootblock).
+
+
+//?srcblock is not dominated by ?destblock
+.decl notdominate(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output notdominate
+
+//base case 
+notdominate(?srcblock, ?destblock) :-
+	node(?destblock),
+	root(?srcblock),
+	?srcblock != ?destblock.
+
+
+//if the predecessor of ?srcblock is not dominated by ?destblock case
+notdominate(?srcblock, ?destblock) :-
+	controlflowgraph(?predblock, ?srcblock),
+	notdominate(?predblock, ?destblock),
+	?srcblock != ?destblock.
+
+
+//?srcblock is dominated by ?destblock
+.decl dominate(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output dominate
+
+dominate(?srcblock, ?destblock) :-
+	node(?srcblock),
+	node(?destblock),
+	!notdominate(?srcblock,?destblock).
+
+
+//?srcblock is dominated by ?destblock
+.decl strictdominate(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output strictdominate
+
+strictdominate(?srcblock, ?destblock) :-
+	dominate(?srcblock, ?destblock),
+	?srcblock != ?destblock.
+
+
+
+//?srcblock's dominance frontier set includes ?frontierblock
+.decl dominancefrontier(?srcblock: BasicBlock, ?frontierblock: BasicBlock)
+.output dominancefrontier
+
+//?srcblock dominates atleast one of the predecessors of ?destblock but not ?destblock
+dominancefrontier(?srcblock, ?frontierblock) :-
+	controlflowgraph(?predblock, ?frontierblock),
+	dominate(?predblock, ?srcblock),
+	!strictdominate(?frontierblock,?srcblock).
+
+//?srcblock is dominated by ?destblock
+.decl immediatedominator(?srcblock: BasicBlock, ?immedblock: BasicBlock)
+.output immediatedominator
+
+//?srcblock dominates atleast one of the predecessors of ?destblock but not ?destblock
+immediatedominator(?srcblock, ?immedblock) :-
+	strictdominate(?srcblock, ?immedblock).
+
+immediatedominator(?srcblock, ?immedblock1) <= immediatedominator(?srcblock, ?immedblock2) :-
+	dominate(?immedblock2,?immedblock1).
+
+
+
+//Leaf BasicBlock
+.decl leaf(?leafblock: BasicBlock)
+.output leaf
+
+//a node without outgoing edge is root
+leaf(?leafblock) :-
+	!controlflowgraph(?leafblock, _),
+	controlflowgraph(_, ?leafblock).
+
+//a node without any edges is root
+leaf(?leafblock) :-
+	node(?leafblock),
+	!controlflowgraph(?leafblock, _),
+	!controlflowgraph(_, ?leafblock).
+
+
+//?srcblock is not post dominated by ?destblock
+.decl notpostdominate(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output notpostdominate
+
+//base case 
+notpostdominate(?srcblock, ?destblock) :-
+	node(?destblock),
+	leaf(?srcblock),
+	?srcblock != ?destblock.
+
+
+//if the successor of ?srcblock is not post dominated by ?destblock case
+notpostdominate(?srcblock, ?destblock) :-
+	controlflowgraph(?srcblock, ?succblock),
+	notpostdominate(?succblock, ?destblock),
+	?srcblock != ?destblock.
+
+
+//?srcblock is postdominated by ?destblock
+.decl postdominate(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output postdominate
+
+postdominate(?srcblock, ?destblock) :-
+	node(?srcblock),
+	node(?destblock),
+	!notpostdominate(?srcblock,?destblock).
+
+//?srcblock is post dominated by ?destblock
+.decl strictpostdominate(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output strictpostdominate
+
+strictpostdominate(?srcblock, ?destblock) :-
+	postdominate(?srcblock, ?destblock),
+	?srcblock != ?destblock.
+
+//?srcblock's post dominance frontier set includes ?frontierblock
+.decl postdominancefrontier(?srcblock: BasicBlock, ?frontierblock: BasicBlock)
+.output postdominancefrontier
+
+//?srcblock post dominates atleast one of the predecessors of ?destblock but not ?destblock
+postdominancefrontier(?srcblock, ?frontierblock) :-
+	controlflowgraph(?frontierblock, ?succblock),
+	postdominate(?succblock, ?srcblock),
+	!strictpostdominate(?frontierblock,?srcblock).
+
+//?srcblock is post dominated by ?destblock
+.decl immediatepostdominator(?srcblock: BasicBlock, ?immedblock: BasicBlock)
+.output immediatepostdominator
+
+//?srcblock dominates atleast one of the predecessors of ?destblock but not ?destblock
+immediatepostdominator(?srcblock, ?immedblock) :-
+	strictpostdominate(?srcblock, ?immedblock).
+
+immediatepostdominator(?srcblock, ?immedblock1) <= immediatepostdominator(?srcblock, ?immedblock2) :-
+	postdominate(?immedblock2, ?immedblock1).
+
+
+.decl entryblockfunction(?entryblock: BasicBlock, ?func: Function)
+.output entryblockfunction
+
+entryblockfunction(?entryblock, ?func) :-
+	instr_func(?inst,?func),
+	instr_block(?inst,?entryblock),
+	!block_predecessors(?entryblock, _).
+
+//Only one entry block is allowed
+entryblockfunction(?entryblock1, ?func) <= entryblockfunction(?entryblock2, ?func) :-
+	?entryblock1 > ?entryblock2.
+
+
+.decl exitblockfunction(?exitblock: BasicBlock, ?func: Function)
+.output exitblockfunction
+
+exitblockfunction(?exitblock, ?func) :-
+	instr_func(?inst,?func),
+	instr_block(?inst,?exitblock),
+	!block_predecessors(_, ?exitblock).
+
+//Only one exit block is allowed
+exitblockfunction(?exitblock1, ?func) <= exitblockfunction(?exitblock2, ?func) :-
+	?exitblock1 < ?exitblock2.
+
+
+
+//?srcnode is control dependent on ?destnode
+.decl controldependencegraph(?srcblock: BasicBlock, ?destblock: BasicBlock)
+.output controldependencegraph
+
+controldependencegraph(?srcblock, ?destblock) :-
+	postdominancefrontier(?srcblock, ?destblock).
+
+controldependencegraph(?srcblock, ?destblock) :-
+	controldependencegraph(?srcblock, ?midblock),
+	postdominancefrontier(?midblock, ?destblock).
+
+controldependencegraph(?srcblock, ?entryblock) :-
+	entryblockfunction(?entryblock, _),
+	block_predecessors(?srcblock,?entryblock).	
+
+controldependencegraph(?exitblock, ?destblock) :-
+	exitblockfunction(?exitblock, _),
+	block_predecessors(?exitblock,?destblock).
+
+//interprocedural
+controldependencegraph(?srcblock, ?destblock) :-
+	call_instr_fn_target(?inst, ?func),
+	entryblockfunction(?srcblock, ?func),
+	instr_block(?inst, ?destblock).
+
+//interprocedural
+controldependencegraph(?srcblock, ?destblock) :-
+	call_instr_fn_target(?inst, ?func),
+	exitblockfunction(?destblock, ?func),
+	instr_block(?inst, ?srcblock).
+
+
+
+//3. Data Dependence Computations/Modifications
+
+//inttoptr addition
+subset.var_points_to(?aCtx, ?alloc, ?ctx, ?toVar) :-
+	subset.var_points_to(?aCtx, ?alloc, ?ctx, ?fromVar),
+	argv_alloc(?alloc),
+	empty_alloc_context(?aCtx),
+	inttoptr_instr(?instr),
+	inttoptr_instr_from_operand(?instr, ?fromVar),
+    instr_assigns_to(?instr, ?toVar),
+    instr_func(?instr, ?instrFunc),
+	subset.callgraph.reachable_context(?ctx, ?instrFunc).
+
+//subsume the unknowns related to arg
+subset.var_points_to(?aCtx, ?ualloc, _, ?toVar) <= subset.var_points_to(?aCtx, ?alloc, ?ctx, ?toVar) :-
+	unknown_location(?ualloc).
+
+
+subset_gep.gep_var_points_to(?aCtx, ?valloc, nil, ?toVar) :-
+	empty_alloc_context(?aCtx),
+	subset_gep.gep_points_to(?inst, _, ?valloc, _),
+	argv_alloc(?valloc),
+	instr_assigns_to(?inst, ?toVar).
+
+
+subset.var_points_to(?aCtx, ?alloc, ?ctx, ?toVar) :-
+	subset.var_points_to(?aCtx, ?alloc, ?ctx, ?fromVar),
+	load_instr_address(?inst, ?fromVar),
+	instr_assigns_to(?inst, ?toVar).
+
+
+subset.var_points_to(?aCtx, ?alloc, ?ctx, ?toVar) :-
+	subset.var_points_to(?aCtx, ?alloc, ?ctx, ?fromVar),
+	call_instr_arg(?inst,1, ?fromVar),
+	call_instr_fn_target(?inst, ?func),
+	buffercopypredeffunctions(_,_,?inst),
+	variable(?toVar),
+	call_instr_arg(?inst,0, ?toVar).
+
+
+//bitcast reverse taints
+//subset.var_points_to(?aCtx, ?alloc, ?ctx, ?toVar) :-
+	//subset.var_points_to(?aCtx, ?alloc, ?ctx, ?fromVar),
+	//bitcast_instr_from_operand(?instr, ?toVar),
+	//variable(?toVar),
+	//instr_assigns_to(?instr, ?fromVar).
+
+//load reverse taints
+//subset.var_points_to(?aCtx, ?alloc, ?ctx, ?toVar) :-
+	//subset.var_points_to(?aCtx, ?alloc, ?ctx, ?fromVar),
+	//load_instr_address(?instr, ?toVar),
+	//variable(?toVar),
+	//instr_assigns_to(?instr, ?fromVar).
+
+.output argv_alloc
+.output basic_allocation
+.output static_subobjects.alloc_subregion_at_arg_index
+.output static_subobjects.arg_index_in_bounds
+.output pointer_index
+.output array_indices
+.output dynamically_sized_alloc
+.output static_subobjects._non_func_basic_allocation
+.output type_has_size
+.output pointer_type_has_component
+.output type_compatible
+.output constant_to_int
+.output static_allocation_type
+.output argv_var_points_to
+//.output static_subobjects.input_allocation_size
+
+
+//?tvar is data dependent on ?mvar
+//.decl datadependencegraph(?tvar: Variable, ?mvar: Variable)
+//.output datadependencegraph
+
+//?tvar is pointing to commbuffer/tainted argument
+//datadependencegraph(?tvar, ?mvar) :-
+	//subset.var_points_to(_, ?valloc, _, ?tvar),
+	//argv_alloc(?valloc),
+	//(
+		//func_param(main, 2, ?mvar);
+		//func_param(main, 3, ?mvar)
+	//).	
+
+
+.decl deflocs(?tvar: Operand, ?uvar: Operand, ?instr: Instruction, ?line: LineNumber)
+.output deflocs
+
+deflocs(?tvar, ?uvar, ?instr, ?line) :-
+	//variable(?uvar),
+	(
+		add_instr_first_operand(?instr, ?uvar);
+		add_instr_second_operand(?instr, ?uvar);
+		sub_instr_first_operand(?instr, ?uvar);
+		sub_instr_second_operand(?instr, ?uvar);
+		xor_instr_first_operand(?instr, ?uvar);
+		xor_instr_second_operand(?instr, ?uvar);
+		or_instr_first_operand(?instr, ?uvar);
+		or_instr_second_operand(?instr, ?uvar);
+		and_instr_first_operand(?instr, ?uvar);
+		and_instr_second_operand(?instr, ?uvar);
+		mul_instr_first_operand(?instr, ?uvar);
+		mul_instr_second_operand(?instr, ?uvar);
+		udiv_instr_first_operand(?instr, ?uvar);
+		udiv_instr_second_operand(?instr, ?uvar);
+		sdiv_instr_first_operand(?instr, ?uvar);
+		sdiv_instr_second_operand(?instr, ?uvar);
+		ashr_instr_first_operand(?instr, ?uvar);
+		ashr_instr_second_operand(?instr, ?uvar);
+		lshr_instr_first_operand(?instr, ?uvar);
+		lshr_instr_second_operand(?instr, ?uvar);
+		shl_instr_first_operand(?instr, ?uvar);
+		shl_instr_second_operand(?instr, ?uvar);
+		select_instr_condition(?instr, ?uvar);
+		select_instr_first_operand(?instr, ?uvar);
+		select_instr_second_operand(?instr, ?uvar);
+		alloca_instr_size(?instr, ?uvar);
+		bitcast_instr_from_operand(?instr, ?uvar);
+		//call_instr_func_operand(?instr, ?uvar);
+		//call_instr_arg(?instr, _, ?uvar);
+		extractelement_instr_base(?instr, ?uvar);
+		extractelement_instr_index(?instr, ?uvar);
+		extractvalue_instr_base(?instr, ?uvar);
+		fadd_instr_first_operand(?instr, ?uvar);
+		fadd_instr_second_operand(?instr, ?uvar);
+		fcmp_instr_first_operand(?instr, ?uvar);
+		fcmp_instr_second_operand(?instr, ?uvar);
+		fdiv_instr_first_operand(?instr, ?uvar);
+		fdiv_instr_second_operand(?instr, ?uvar);
+		fmul_instr_first_operand(?instr, ?uvar);
+		fmul_instr_second_operand(?instr, ?uvar);
+		fneg_instr_operand(?instr, ?uvar);
+		fpext_instr_from_operand(?instr, ?uvar);
+		fptosi_instr_from_operand(?instr, ?uvar);
+		fptoui_instr_from_operand(?instr, ?uvar);
+		fptrunc_instr_from_operand(?instr, ?uvar);
+		frem_instr_first_operand(?instr, ?uvar);
+		frem_instr_second_operand(?instr, ?uvar);
+		fsub_instr_first_operand(?instr, ?uvar);
+		fsub_instr_second_operand(?instr, ?uvar);
+		getelementptr_instr_base(?instr, ?uvar);
+		getelementptr_instr_index(?instr, _, ?uvar);
+		icmp_instr_first_operand(?instr, ?uvar);
+		icmp_instr_second_operand(?instr, ?uvar);
+		insertelement_instr_base(?instr, ?uvar);
+		insertelement_instr_index(?instr, ?uvar);
+		insertelement_instr_value(?instr, ?uvar);
+		insertvalue_instr_base(?instr, ?uvar);
+		insertvalue_instr_value(?instr, ?uvar);
+		inttoptr_instr_from_operand(?instr, ?uvar);
+		invoke_instr_func_operand(?instr, ?uvar);
+		load_instr_address(?instr, ?uvar);
+		phi_instr_pair(?instr, _,?uvar,_);
+		ptrtoint_instr_from_operand(?instr, ?uvar);
+		sext_instr_from_operand(?instr, ?uvar);
+		shufflevector_instr_first_vector(?instr, ?uvar);
+		shufflevector_instr_second_vector(?instr, ?uvar);
+		sitofp_instr_from_operand(?instr, ?uvar);
+		srem_instr_first_operand(?instr, ?uvar);
+		srem_instr_second_operand(?instr, ?uvar);
+		//store_instr_value(?instr, ?uvar);
+		//store_instr_address(?instr, ?uvar);
+		trunc_instr_from_operand(?instr, ?uvar);
+		uitofp_instr_from_operand(?instr, ?uvar);
+		urem_instr_first_operand(?instr, ?uvar);
+		urem_instr_second_operand(?instr, ?uvar);
+		va_arg_instr_va_list(?instr, ?uvar);
+		zext_instr_from_operand(?instr, ?uvar)
+	),
+	instr_assigns_to(?instr, ?tvar),
+	(
+		instr_pos(?instr, ?line, _);
+		(
+			!instr_pos(?instr, _, _),
+			?line = -1
+		)
+	).
+
+//?tvar is defined using ?uvar at line
+//.decl defusechains(?tvar: Variable, ?uvar: Variable, ?line: LineNumber)
+//.output defusechains
+
+//defusechains(?tvar, ?uvar, ?line) :-
+	//deflocs(?tvar, ?dinstr, ?dline)
+
+deflocs(?tvar, ?uvar, ?instr, ?line) :-
+	//variable(?uvar),
+	//variable(?tvar),
+	store_instr_value(?instr,?uvar),
+	store_instr_address(?instr,?tvar),
+	(
+		instr_pos(?instr, ?line, _);
+		(
+			!instr_pos(?instr, _, _),
+			?line = -1
+		)
+	).
+
+
+//interprocedural
+//deflocs(?tvar, ?uvar, ?inst, ?line) :-
+	//call_instr_fn_target(?inst, ?func),
+	//call_instr_arg(?inst, ?pidx, ?uvar),
+	//func_param(?func, ?pidx, ?tvar),
+	//(
+		//instr_pos(?inst, ?line, _);
+		//(
+			//!instr_pos(?inst, _, _),
+			//?line = -1
+		//)
+	//).
+
+.decl defuselines(?tvar: Variable, ?uvar: Operand, ?inst: Instruction, ?line: LineNumber)
+.output defuselines
+
+defuselines(?tvar, ?uvar, ?inst, ?line) :-
+	variable(?tvar),
+	deflocs(?tvar, ?uvar, ?inst, ?line).
+
+defuselines(?tvar, ?pvar, ?inst, ?uline) :-
+	variable(?tvar),
+	variable(?uvar),
+	deflocs(?uvar, ?pvar, ?inst,?uline),
+	defuselines(?tvar, ?uvar, _, ?line).
+
+
+
+
+.decl entrynodefunction(?fname: Function, ?inst: Instruction)
+.output entrynodefunction
+
+entrynodefunction(?fname, ?inst) :-
+	entryblockfunction(?entryblock, ?fname),
+	block_first_instr(?entryblock, ?inst).
+
+
+.decl grefnodes(?func: Function, ?refvar: Variable)
+.output grefnodes
+
+//Function parameter that is referred in function
+grefnodes(?func, ?refvar) :-
+		variable(?refvar),
+		func_param(?func, _, ?refvar),
+		defuselines(_, ?refvar, _, _).
+
+//non-local variable that is referred in function
+grefnodes(?func, ?refvar) :-
+		variable(?refvar),
+		!variable_in_func(?refvar, ?func),
+		defuselines(_, ?refvar, ?inst, _),
+		instr_func(?inst, ?func).
+		
+
+
+.decl gmodnodes(?func: Function, ?modvar: Variable)
+.output gmodnodes
+
+gmodnodes(?func, ?modvar) :-
+	variable(?modvar),
+	func_param(?func, _, ?modvar),
+	instr_func(?sinst, ?func),
+	store_instr(?sinst),
+	(
+		store_instr_address(?sinst, ?modvar);
+		(
+			store_instr_address(?sinst, ?svar),
+			defuselines(?svar, ?modvar, _, _)
+		)
+	).
+
+gmodnodes(?func, ?modvar) :-
+	variable(?modvar),
+	!variable_in_func(?modvar, ?func),
+	instr_func(?sinst, ?func),
+	store_instr(?sinst),
+	(
+		store_instr_address(?sinst, ?modvar);
+		(
+			store_instr_address(?sinst, ?svar),
+			defuselines(?svar, ?modvar, _, _)
+		)
+	).
+
+
+.decl formalinputnodes(?func: Function, ?fivar: Variable)
+.output formalinputnodes
+
+formalinputnodes(?func, ?fivar) :-
+	gmodnodes(?func, ?fivar);
+	grefnodes(?func, ?fivar).
+
+
+.decl formaloutputnodes(?func: Function, ?fovar: Variable)
+.output formaloutputnodes
+
+formaloutputnodes(?func, ?fovar) :-
+	gmodnodes(?func, ?fovar).
+
+formaloutputnodes(?func, ?fovar) :-
+	variable(?fovar),
+	func_returns_value(?fovar, ?func).
+
+.decl entrynodelinks(?inst: Instruction, ?fparam: Variable)
+.output entrynodelinks
+
+entrynodelinks(?inst, ?finode) :-
+	entrynodefunction(?func, ?inst),
+	formalinputnodes(?func, ?finode).
+
+entrynodelinks(?inst, ?fonode) :-
+	entrynodefunction(?func, ?inst),
+	formaloutputnodes(?func, ?fonode).
+
+
+
+
+.decl actualinputnodes(?inst: Instruction, ?aivar: Variable, ?func: Function, ?fivar: Variable)
+.output actualinputnodes
+
+actualinputnodes(?inst, ?aivar, ?func, ?fivar) :-
+	call_instr(?inst),
+	call_instr_fn_target(?inst, ?func),
+	(
+		gmodnodes(?func, ?fivar);
+		grefnodes(?func, ?fivar)
+	),
+	variable(?aivar),
+	func_param(?func, ?idxnum, ?fivar),
+	call_instr_arg(?inst, ?idxnum, ?aivar).
+
+actualinputnodes(?inst, ?aivar, ?func, ?aivar) :-
+	call_instr(?inst),
+	call_instr_fn_target(?inst, ?func),
+	(
+		gmodnodes(?func, ?aivar);
+		grefnodes(?func, ?aivar)
+	),
+	!variable_in_func(?aivar, ?func).
+
+
+.decl actualoutputnodes(?inst: Instruction, ?aovar: Variable, ?func: Function, ?fovar: Variable)
+.output actualoutputnodes
+
+actualoutputnodes(?inst, ?aovar, ?func, ?fovar) :-
+	call_instr(?inst),
+	call_instr_fn_target(?inst, ?func),
+	gmodnodes(?func, ?fovar),
+	variable(?aovar),
+	func_param(?func, ?idxnum, ?fovar),
+	call_instr_arg(?inst, ?idxnum, ?aovar).
+
+actualoutputnodes(?inst, ?aovar, ?func, ?aovar) :-
+	call_instr(?inst),
+	call_instr_fn_target(?inst, ?func),
+	gmodnodes(?func, ?aovar),
+	!variable_in_func(?aovar, ?func).
+
+actualoutputnodes(?inst, ?aovar, ?func, ?aovar) :-
+	call_instr(?inst),
+	call_instr_fn_target(?inst, ?func),
+	instr_assigns_to(?inst, ?aovar).
+
+
+.decl calledgelinks(?callinst: Instruction, ?entryinst: Instruction)
+.output calledgelinks
+
+calledgelinks(?callinst, ?entryinst) :-
+	call_instr(?callinst),
+	call_instr_fn_target(?callinst, ?func),
+	entrynodefunction(?func, ?entryinst).
+
+
+.decl callnodelinks(?inst: Instruction, ?aparam: Variable)
+.output callnodelinks
+
+callnodelinks(?inst, ?aparam) :-
+	call_instr_fn_target(?inst, ?func),
+	actualinputnodes(?inst, ?aparam, ?func, _).
+
+callnodelinks(?inst, ?aparam) :-
+	call_instr_fn_target(?inst, ?func),
+	actualoutputnodes(?inst, ?aparam, ?func, _).
+
+
+.decl parameterinlinks(?aparam: Variable, ?fparam: Variable)
+.output parameterinlinks
+
+parameterinlinks(?aparam, ?fparam) :-
+	actualinputnodes(_, ?aparam, _, ?fparam).
+
+
+.decl parameteroutlinks(?fparam: Variable, ?aparam: Variable)
+.output parameteroutlinks
+
+parameteroutlinks(?fparam, ?aparam) :-
+	actualoutputnodes(_, ?aparam, _, ?fparam).
+
+
+//entrynodefunction(?func, ?inst),
+
+//call_instr_arg(instr:CallInstruction, i:ArgumentIndex, arg:Operand)
+//func_param(func:Function, index:ArgumentIndex, param:Variable)
+
+
+//.decl reachdefsubgraph(?inst: Instruction)
+//.output reachdefsubgraph
+
+//reachdefsubgraph(?inst) :-
+	//alloca_instr(?inst).
+
+//reachdefsubgraph(?inst) :-
+	//store_instr(?inst).
+
+//reachdefsubgraph(?inst) :-
+	//call_instr(?inst).
+
+//reachdefsubgraph(?inst) :-
+	//ret_instr(?inst).
+
+
+//4. Generating Dependence Graph
+.decl controldependentlines(?inst: Instruction, ?line: LineNumber)
+.output controldependentlines
+
+controldependentlines(?inst, ?line) :-
+	instr_block(?inst, ?block),
+	controldependencegraph(?block, ?depblock),
+	block_last_instr(?depblock, ?dinst),
+	//instr_block(?dinst, ?depblock),
+	instr_pos(?dinst, ?line, _).
+
+controldependentlines(?inst, ?line) :-
+	instr_block(?inst, ?block),
+	controldependencegraph(?block, ?depblock),
+	block_last_instr(?depblock, ?dinst),
+	//instr_block(?dinst, ?depblock),
+	//instr_pos(?dinst, ?line, _).
+	controldependentlines(?dinst,?line).
+
+//handling switch blocks
+controldependentlines(?inst, ?line) :-
+	instr_block(?inst, ?block),
+	controldependencegraph(?block, ?depblock),
+	block_last_instr(?depblock, ?dinst),
+	//instr_block(?dinst, ?depblock),
+	!instr_pos(?dinst, _, _),
+	block_predecessors(?depblock, ?predblock),
+	block_first_instr(?predblock, ?ninst),
+	instr_pos(?ninst, ?line, _).
+
+
+//controldependentlines(?inst, ?block, ?blockpath) :-
+	//instr_block(?inst, ?block),
+	//controldependencegraph(?block, ?prevblock),
+	//?blockpath = [?]
+
+
+.type InstNode = Instruction
+.type ParamNode = Variable
+.type SliceNode = ParamNode | InstNode
+
+
+.decl slicegraph(?frominst: SliceNode, ?toinst: SliceNode, ?linktype: symbol)
+.output slicegraph
+
+//control dependence on post dominant frontier
+slicegraph(?frominst, ?toinst, ?linktype) :-
+	instr_block(?toinst, ?block),
+	controldependencegraph(?block, ?depblock),
+	block_last_instr(?depblock, ?frominst),
+	?linktype = "Control".
+
+//control dependence on post dominant frontier
+slicegraph(?frominst, ?toinst, ?linktype) :-
+	instr_block(?toinst, ?block),
+	controldependencegraph(?block, ?depblock),
+	block_last_instr(?depblock, ?dinst),
+	!instr_pos(?dinst, _, _),
+	block_predecessors(?depblock, ?predblock),
+	block_first_instr(?predblock, ?frominst),
+	instr_pos(?frominst, ?line, _),
+	?linktype = "Control".
+
+//data dependence between def-use
+slicegraph(?frominst, ?toinst, ?linktype) :-
+	defuselines(?tvar, ?uvar, ?toinst, _),
+	defuselines(?uvar, _, ?frominst, _),
+	?linktype = "Data".
+
+//data dependence of instr on used variables in the instr
+slicegraph(?fromvar, ?toinst, ?linktype) :-
+	variable(?fromvar),
+	defuselines(?tvar, ?fromvar, ?toinst, _),
+	?linktype = "Data".
+
+//data dependence of instr on used variables in the instr
+slicegraph(?frominst, ?tovar, ?linktype) :-
+	variable(?tovar),
+	defuselines(?tovar, _, ?frominst, _),
+	?linktype = "Data".
+
+//data dependence of instr on used variables in the instr
+slicegraph(?fromvar, ?tovar, ?linktype) :-
+	variable(?tovar),
+	variable(?fromvar),
+	defuselines(?tovar, ?fromvar, ?frominst, _),
+	?linktype = "Data".
+
+
+//Parameter edges
+slicegraph(?fromparam, ?toparam, ?linktype) :-
+	parameterinlinks(?fromparam, ?toparam),
+	?linktype = "Parameterin".
+
+slicegraph(?fromparam, ?toparam, ?linktype) :-
+	parameteroutlinks(?fromparam, ?toparam),
+	?linktype = "Parameterout".
+
+//Call edges
+slicegraph(?frominst, ?toinst, ?linktype) :-
+	calledgelinks(?frominst, ?toinst),
+	?linktype = "Call".
+
+//Call node links
+slicegraph(?frominst, ?toparam, ?linktype) :-
+	callnodelinks(?frominst, ?toparam),
+	?linktype = "CallnodeLink".
+
+//entry node links
+slicegraph(?frominst, ?toparam, ?linktype) :-
+	entrynodelinks(?frominst, ?toparam),
+	?linktype = "EntrynodeLink".
+
+//summary edges
+//.decl summaryreachgraph(?frominst: SliceNode, ?toinst: SliceNode, ?linktype: symbol)
+//.output summaryreachgraph
+
+//summaryreachgraph(?fromparam, ?toparam, ?linktype) :-
+	//slicegraph(?fromparam, ?toparam, ?linktype).
+
+//summaryreachgraph(?fromparam, ?toparam, ?linktype) :-
+	//actualinputnodes(?inst, ?fromparam, ?func, ?fivar),
+	//actualoutputnodes(?inst, ?toparam, ?func, ?fovar),
+	//slicegraph(?fromparam, ?torand, ?linktype),
+	//summaryreachgraph(?torand, ?toparam, _).
+
+
+.type LineList = [
+    keepline : LineNumber,
+    restlines : LineList
+]
+
+.decl slicingcriteria(?inst: SliceNode, ?linelist: LineNumber)
+.output slicingcriteria
+
+
+.decl slicingpass1(?inst: SliceNode, ?imed: SliceNode, ?linelist: LineNumber)
+.output slicingpass1
+
+slicingpass1(?inst, ?inst, ?pos) :-
+	slicingcriteria(?inst, ?pos).
+
+slicingpass1(?inst, ?prevnode, ?linelist) :-
+	slicingpass1(?inst, ?imed, ?oldlinelist),
+	slicegraph(?prevnode, ?imed, ?edgetype),
+	?edgetype != "Parameterout",
+	(
+		(
+			variable(?prevnode),
+			defuselines(?prevnode, _, _, ?newline)
+		);
+		(
+			instr(?prevnode),
+			(
+				instr_pos(?prevnode, ?newline, _);
+				(
+					!instr_pos(?prevnode, _, _),
+					?newline = -1
+				)
+			)
+		)
+	),
+	?linelist = ?newline.
+
+
+.decl slicingpass2(?inst: SliceNode, ?imed: SliceNode, ?linelist: LineNumber)
+.output slicingpass2
+
+slicingpass2(?inst, ?imed, ?linelist) :-
+	slicingpass1(?inst, ?imed, ?linelist).
+
+slicingpass2(?inst, ?prevnode, ?linelist) :-
+	slicingpass2(?inst, ?imed, ?oldlinelist),
+	slicegraph(?prevnode, ?imed, ?edgetype),
+	?edgetype != "Parameterin",
+	?edgetype != "Call",
+	(
+		(
+			variable(?prevnode),
+			defuselines(?prevnode, _, _, ?newline)
+		);
+		(
+			instr(?prevnode),
+			(
+				instr_pos(?prevnode, ?newline, _);
+				(
+					!instr_pos(?prevnode, _, _),
+					?newline = -1
+				)
+			)
+		)
+	),
+	?linelist = ?newline.
+
+/*
+1. SMRAM Read Vulnerability. Attacker controlled source of copymem
+*/
+
+.decl smramcopyfunctions(?destn: Operand, ?sourc: Operand, ?instr: Instruction)
+.output smramcopyfunctions
+
+smramcopyfunctions(?destn, ?sourc, ?instr) :-
+    func_name(?callee, ?name),
+    (
+	"@memcpy"=substr(?name,0,7);
+    "@strcpy"=substr(?name,0,7);
+    "@t_strcpy"=substr(?name,0,9);
+	"@InternalMemCopyMem"=substr(?name,0,19);
+	"@CopyMem"=substr(?name,0,8);
+	"@SmmCopyMemToSmram"=substr(?name,0,18);
+	"@SmmCopyMem"=substr(?name,0,11);
+	"@CopyMemByWidth"=substr(?name,0,15);
+	"@MmioWrite8"=substr(?name,0,11);
+	"@MmioWrite16"=substr(?name,0,12);
+	"@MmioWrite32"=substr(?name,0,12);
+	"@MmioWrite64"=substr(?name,0,12);
+	"@SaveLockBox"=substr(?name,0,12);
+	"@SetLockBoxAttributes"=substr(?name,0,21);
+	"@UpdateLockBox"=substr(?name,0,14);
+	"@RestoreLockBox"=substr(?name,0,15);
+	"@DuplicateMemory"=substr(?name,0,16)	
+    ),
+	(
+		subset.callgraph.callgraph_edge(_, ?callee, _, ?instr);
+		call_instr_fn_target(?instr, ?callee)
+	),
+	actual_arg(?instr, 0, ?destn),
+    actual_arg(?instr, 1, ?sourc).
+
+
+	
+smramcopyfunctions(?destn, ?sourc, ?instr) :-
+	store_instr(?instr),
+	store_instr_value(?instr,?sourc),
+	store_instr_address(?instr,?destn).
+
+.decl smram_read_primitive(?func: Function, ?destn: Operand, ?sourc: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output smram_read_primitive
+
+smram_read_primitive(?func, ?destn, ?sourc, ?sourc, ?instr, ?line) :-
+	//tainted_source(?sourc, ?ogsrc, ?edge, _),
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?sourc);
+		(
+			subset.operand_points_to(_,?ialloc,_,?sourc),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	smramcopyfunctions(?destn, ?sourc, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+
+/*
+2. SMRAM Write Vulnerability. Attacker controlled destination of copymem
+*/
+
+.decl smram_write_primitive(?func: Function, ?destn: Operand, ?sourc: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output smram_write_primitive
+
+smram_write_primitive(?func, ?destn, ?sourc, ?destn, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?destn);
+		(
+			subset.operand_points_to(_,?ialloc,_,?destn),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	smramcopyfunctions(?destn, ?sourc, ?instr),
+	instr_func(?instr, ?func),
+	instr_pos(?instr, ?line, ?col).
+
+
+/*
+3. Use After Free Vulnerability
+*/
+
+.decl freefunctions(?fvar: Operand, ?instr: Instruction, ?line:LineNumber)
+.output freefunctions
+
+freefunctions(?fvar, ?instr, ?line) :-
+    func_name(?callee, ?name),
+    (
+    "@free"=substr(?name,0,5);
+    "@SmmFreePages"=substr(?name,0,13);
+	"@FreePool"=substr(?name,0,9)
+    ),
+	(
+		subset.callgraph.callgraph_edge(_, ?callee, _, ?instr);
+		call_instr_fn_target(?instr, ?callee)
+	),
+	actual_arg(?instr, 0, ?fvar),
+	instr_pos(?instr, ?line, ?col).
+
+freefunctions(?fvar, ?instr, ?line) :-
+	freefunctions(?oldvar, ?oldinstr, _),
+	!load_instr(?oldinstr),
+	instr_assigns_to(?instr,?oldvar),
+	load_instr(?instr),
+	load_instr_address(?instr, ?fvar),
+	instr_pos(?instr, ?line, ?col).
+
+
+.decl freeinstructions(?instr: Instruction)
+freeinstructions(?instr) :- freefunctions(_,?instr,_).
+
+.decl instr_reachability(?instrfrom: Instruction, ?instrto: Instruction)
+.output instr_reachability
+
+//Assuming base case always happens within the same block
+instr_reachability(?instrfrom, ?instrto) :-
+	freeinstructions(?instrfrom),
+	instr_successor(?instrfrom, ?instrto).
+
+//Case when the destination is in same block
+instr_reachability(?instrfrom, ?instrto) :-
+	instr_reachability(?instrfrom, ?instrmid),
+	instr_successor(?instrmid, ?instrto),
+	instr_block(?instrmid, ?BB1),
+	instr_block(?instrto, ?BB1).
+
+//Case when the destination is in different block
+instr_reachability(?instrfrom, ?instrto) :-
+	instr_reachability(?instrfrom, ?instrmid),
+	instr_block(?instrmid, ?BB1),
+	block_predecessors(?BB2, ?BB1),
+	block_first_instr(?BB2, ?instrto),
+	?BB2 < ?BB1.
+
+.decl uafvuln(?fvar: Operand, ?instrfrom: Instruction, ?instrto: Instruction, ?fline:LineNumber)
+.output uafvuln
+
+uafvuln(?fvar, ?instrfrom, ?instrto, ?fline) :-
+	freefunctions(?fvar, ?instrfrom, ?fline),
+	instr_reachability(?instrfrom, ?instrto),
+	(
+		add_instr_first_operand(?instrto, ?fvar);
+		add_instr_second_operand(?instrto, ?fvar);
+		sub_instr_first_operand(?instrto, ?fvar);
+		sub_instr_second_operand(?instrto, ?fvar);
+		xor_instr_first_operand(?instrto, ?fvar);
+		xor_instr_second_operand(?instrto, ?fvar);
+		or_instr_first_operand(?instrto, ?fvar);
+		or_instr_second_operand(?instrto, ?fvar);
+		and_instr_first_operand(?instrto, ?fvar);
+		and_instr_second_operand(?instrto, ?fvar);
+		mul_instr_first_operand(?instrto, ?fvar);
+		mul_instr_second_operand(?instrto, ?fvar);
+		udiv_instr_first_operand(?instrto, ?fvar);
+		udiv_instr_second_operand(?instrto, ?fvar);
+		sdiv_instr_first_operand(?instrto, ?fvar);
+		sdiv_instr_second_operand(?instrto, ?fvar);
+		ashr_instr_first_operand(?instrto, ?fvar);
+		ashr_instr_second_operand(?instrto, ?fvar);
+		lshr_instr_first_operand(?instrto, ?fvar);
+		lshr_instr_second_operand(?instrto, ?fvar);
+		shl_instr_first_operand(?instrto, ?fvar);
+		shl_instr_second_operand(?instrto, ?fvar);
+		select_instr_condition(?instrto, ?fvar);
+		select_instr_first_operand(?instrto, ?fvar);
+		select_instr_second_operand(?instrto, ?fvar);
+		alloca_instr_size(?instrto, ?fvar);
+		atomicrmw_instr_address(?instrto, ?fvar);
+		atomicrmw_instr_value(?instrto, ?fvar);
+		bitcast_instr_from_operand(?instrto, ?fvar);
+		br_instr_condition(?instrto, ?fvar);
+		call_instr_func_operand(?instrto, ?fvar);
+		call_instr_arg(?instrto, _, ?fvar);
+		cmpxchg_instr_address(?instrto, ?fvar);
+		cmpxchg_instr_cmp_value(?instrto, ?fvar);
+		cmpxchg_instr_new_value(?instrto, ?fvar);
+		extractelement_instr_base(?instrto, ?fvar);
+		extractelement_instr_index(?instrto, ?fvar);
+		extractvalue_instr_base(?instrto, ?fvar);
+		fadd_instr_first_operand(?instrto, ?fvar);
+		fadd_instr_second_operand(?instrto, ?fvar);
+		fcmp_instr_first_operand(?instrto, ?fvar);
+		fcmp_instr_second_operand(?instrto, ?fvar);
+		fdiv_instr_first_operand(?instrto, ?fvar);
+		fdiv_instr_second_operand(?instrto, ?fvar);
+		fmul_instr_first_operand(?instrto, ?fvar);
+		fmul_instr_second_operand(?instrto, ?fvar);
+		fneg_instr_operand(?instrto, ?fvar);
+		fpext_instr_from_operand(?instrto, ?fvar);
+		fptosi_instr_from_operand(?instrto, ?fvar);
+		fptoui_instr_from_operand(?instrto, ?fvar);
+		fptrunc_instr_from_operand(?instrto, ?fvar);
+		freeze_instr_operand(?instrto, ?fvar);
+		frem_instr_first_operand(?instrto, ?fvar);
+		frem_instr_second_operand(?instrto, ?fvar);
+		fsub_instr_first_operand(?instrto, ?fvar);
+		fsub_instr_second_operand(?instrto, ?fvar);
+		getelementptr_instr_base(?instrto, ?fvar);
+		getelementptr_instr_index(?instrto, _, ?fvar);
+		icmp_instr_first_operand(?instrto, ?fvar);
+		icmp_instr_second_operand(?instrto, ?fvar);
+		indirectbr_instr_address(?instrto, ?fvar);
+		insertelement_instr_base(?instrto, ?fvar);
+		insertelement_instr_index(?instrto, ?fvar);
+		insertelement_instr_value(?instrto, ?fvar);
+		insertvalue_instr_base(?instrto, ?fvar);
+		insertvalue_instr_value(?instrto, ?fvar);
+		inttoptr_instr_from_operand(?instrto, ?fvar);
+		invoke_instr_func_operand(?instrto, ?fvar);
+		load_instr_address(?instrto, ?fvar);
+		phi_instr_pair(?instrto, _,?fvar,_);
+		ptrtoint_instr_from_operand(?instrto, ?fvar);
+		resume_instr_operand(?instrto, ?fvar);
+		ret_instr_operand(?instrto, ?fvar);
+		sext_instr_from_operand(?instrto, ?fvar);
+		shufflevector_instr_first_vector(?instrto, ?fvar);
+		shufflevector_instr_second_vector(?instrto, ?fvar);
+		sitofp_instr_from_operand(?instrto, ?fvar);
+		srem_instr_first_operand(?instrto, ?fvar);
+		srem_instr_second_operand(?instrto, ?fvar);
+		store_instr_value(?instrto, ?fvar);
+		store_instr_address(?instrto, ?fvar);
+		switch_instr_operand(?instrto, ?fvar);
+		trunc_instr_from_operand(?instrto, ?fvar);
+		uitofp_instr_from_operand(?instrto, ?fvar);
+		urem_instr_first_operand(?instrto, ?fvar);
+		urem_instr_second_operand(?instrto, ?fvar);
+		va_arg_instr_va_list(?instrto, ?fvar);
+		zext_instr_from_operand(?instrto, ?fvar)
+	).
+
+
+.decl source_tainted_uaf_primitive(?func: Function, ?destn: Operand, ?fline:LineNumber, ?ogsrc: Operand, ?line:LineNumber, ?mline:LineNumber)
+.output source_tainted_uaf_primitive
+
+source_tainted_uaf_primitive(?func, ?destn, ?fline, ?destn, ?line, ?mline) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?destn);
+		(
+			subset.operand_points_to(_,?ialloc,_,?destn),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instrto, ?func),
+	uafvuln(?destn, ?instrfrom, ?instrto, ?mline),
+	instr_pos(?instrto, ?line, ?col),
+	instr_pos(?instrfrom, ?fline, ?fcol).
+
+
+
+/*
+4. Buffer Overflow Vulnerability
+*/
+
+
+.decl buffercopypredeffunctions(?destn: Operand, ?sourc: Operand, ?instr: Instruction)
+.output buffercopypredeffunctions
+
+buffercopypredeffunctions(?destn, ?sourc, ?instr) :-
+    func_name(?callee, ?name),
+    (
+	"@memcpy"=substr(?name,0,7);
+    "@strcpy"=substr(?name,0,7);
+    "@t_strcpy"=substr(?name,0,9);
+	"@InternalMemCopyMem"=substr(?name,0,19);
+	"@CopyMem"=substr(?name,0,8);
+	"@SmmCopyMemToSmram"=substr(?name,0,18);
+	"@SmmCopyMem"=substr(?name,0,11);
+	"@CopyMemByWidth"=substr(?name,0,15);
+	"@MmioWrite8"=substr(?name,0,11);
+	"@MmioWrite16"=substr(?name,0,12);
+	"@MmioWrite32"=substr(?name,0,12);
+	"@MmioWrite64"=substr(?name,0,12)
+    ),
+	(
+		subset.callgraph.callgraph_edge(_, ?callee, _, ?instr);
+		call_instr_fn_target(?instr, ?callee)
+	),
+	actual_arg(?instr, 0, ?destn),
+    actual_arg(?instr, 1, ?sourc).
+
+
+buffercopypredeffunctions(?destn, ?sourc, ?instr) :-
+    func_name(?callee, ?name),
+    (
+	"@Dhcp6AppendOption"=substr(?name,0,18);
+	"@Dhcp6AppendETOption"=substr(?name,0,20)
+    ),
+	(
+		subset.callgraph.callgraph_edge(_, ?callee, _, ?instr);
+		call_instr_fn_target(?instr, ?callee)
+	),
+	actual_arg(?instr, 0, ?destn),
+    actual_arg(?instr, 4, ?sourc).
+
+
+
+.decl source_tainted_buffer_overflow_primitive(?func: Function, ?destn: Operand, ?sourc: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output source_tainted_buffer_overflow_primitive
+
+source_tainted_buffer_overflow_primitive(?func, ?destn, ?sourc, ?sourc, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?sourc);
+		(
+			subset.operand_points_to(_,?ialloc,_,?sourc),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	buffercopypredeffunctions(?destn, ?sourc, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+
+/*
+5. Integer Overflow Vulnerability
+*/
+
+
+.decl integeropinstructions(?op1: Operand, ?op2: Operand, ?instr: Instruction)
+.output integeropinstructions
+
+integeropinstructions(?op1, ?op2, ?instr) :-
+	add_instr(?instr),
+	add_instr_first_operand(?instr,?op1),
+	add_instr_second_operand(?instr,?op2).
+
+
+.decl operand_tainted_integer_overflow_primitive(?func: Function, ?op1: Operand, ?op2: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output operand_tainted_integer_overflow_primitive
+
+operand_tainted_integer_overflow_primitive(?func, ?op1, ?op2, ?op1, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?op1);
+		(
+			subset.operand_points_to(_,?ialloc,_,?op1),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	integeropinstructions(?op1, ?op2, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+operand_tainted_integer_overflow_primitive(?func, ?op1, ?op2, ?op2, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?op2);
+		(
+			subset.operand_points_to(_,?ialloc,_,?op2),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	integeropinstructions(?op1, ?op2, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+
+
+/*
+6. Integer Underflow Vulnerability
+*/
+
+
+.decl integerupinstructions(?op1: Operand, ?op2: Operand, ?instr: Instruction)
+.output integerupinstructions
+
+integerupinstructions(?op1, ?op2, ?instr) :-
+	sub_instr(?instr),
+	sub_instr_first_operand(?instr,?op1),
+	sub_instr_second_operand(?instr,?op2).
+
+
+.decl operand_tainted_integer_underflow_primitive(?func: Function, ?op1: Operand, ?op2: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output operand_tainted_integer_underflow_primitive
+
+operand_tainted_integer_underflow_primitive(?func, ?op1, ?op2, ?op1, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?op1);
+		(
+			subset.operand_points_to(_,?ialloc,_,?op1),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	integerupinstructions(?op1, ?op2, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+operand_tainted_integer_underflow_primitive(?func, ?op1, ?op2, ?op2, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?op2);
+		(
+			subset.operand_points_to(_,?ialloc,_,?op2),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	integerupinstructions(?op1, ?op2, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+
+/*
+7. Division By Zero Vulnerability
+*/
+
+
+.decl divisioninstructions(?divd: Operand, ?divis: Operand, ?instr: Instruction)
+.output divisioninstructions
+
+divisioninstructions(?divid, ?divis, ?instr) :-
+    func_name(?callee, ?name),
+    (
+    "@DivU64x32"=substr(?name,0,10);
+    "@DivU64x32Remainder"=substr(?name,0,19);
+	"@DivU64x64Remainder"=substr(?name,0,19);
+	"@DivS64x64Remainder"=substr(?name,0,19)
+    ),
+	(
+		subset.callgraph.callgraph_edge(_, ?callee, _, ?instr);
+		call_instr_fn_target(?instr, ?callee)
+	),
+	actual_arg(?instr, 0, ?divid),
+    actual_arg(?instr, 1, ?divis).
+
+divisioninstructions(?divid, ?divis, ?instr) :-
+	udiv_instr(?instr),
+	udiv_instr_first_operand(?instr,?divid),
+	udiv_instr_second_operand(?instr,?divis).
+
+divisioninstructions(?divid, ?divis, ?instr) :-
+	sdiv_instr(?instr),
+	sdiv_instr_first_operand(?instr,?divid),
+	sdiv_instr_second_operand(?instr,?divis).
+
+divisioninstructions(?divid, ?divis, ?instr) :-
+	fdiv_instr(?instr),
+	fdiv_instr_first_operand(?instr,?divid),
+	fdiv_instr_second_operand(?instr,?divis).
+
+
+
+
+.decl divisor_tainted_division_primitive(?func: Function, ?divid: Operand, ?divis: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output divisor_tainted_division_primitive
+
+divisor_tainted_division_primitive(?func, ?divid, ?divis, ?divis, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?divis);
+		(
+			subset.operand_points_to(_,?ialloc,_,?divis),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	divisioninstructions(?divid, ?divis, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+
+
+/*
+8. Index Out of Bounds Vulnerability
+*/
+
+.decl indexaccessinstructions(?op1: Operand, ?op2: Operand, ?instr: Instruction)
+.output indexaccessinstructions
+
+indexaccessinstructions(?op1, ?op2, ?instr) :-
+	getelementptr_instr(?instr),
+	getelementptr_instr_base(?instr,?op1),
+	getelementptr_instr_index(?instr, 0, ?op2).
+
+
+.decl index_tainted_out_of_bound_primitive(?func: Function, ?op1: Operand, ?op2: Operand, ?ogsrc: Operand, ?instr: Instruction, ?line:LineNumber)
+.output index_tainted_out_of_bound_primitive
+
+index_tainted_out_of_bound_primitive(?func, ?op1, ?op2, ?op2, ?instr, ?line) :-
+	argv_alloc(?valloc),
+	(
+		subset.var_points_to(_,?valloc,_,?op2);
+		(
+			subset.operand_points_to(_,?ialloc,_,?op2),
+			subset.ptr_points_to(_,?valloc,_,?ialloc)
+		)
+	),
+	instr_func(?instr, ?func),
+	indexaccessinstructions(?op1, ?op2, ?instr),
+	instr_pos(?instr, ?line, ?col).
+
+
+
+//slicingcriteria(?instr, ?pos) :-
+//	smram_read_primitive(_,_,_,_,?instr,?pos).
+
+//slicingcriteria(?var, ?pos) :-
+//	variable(?var),
+//	smram_read_primitive(_,_,?var,_,_,?pos).
+
+
+/*
+9. gBS Vulnerability
+*/
+
+.decl efi_boot_service_primitive(?instr: Instruction, ?line:LineNumber, ?sometype:Type)
+.output efi_boot_service_primitive
+
+efi_boot_service_primitive(?instr, ?line, ?sometype) :-
+	//func_name(?func, "@SmmDriverDispatchHandler"),
+	//instr_func(?instr, ?func),
+	load_instr(?instr),
+	load_instr_address_ptr_type(?instr,?sometype),
+	substr(?sometype, 0, 27) = "%struct.EFI_BOOT_SERVICES**",
+	instr_pos(?instr, ?line, ?col).
