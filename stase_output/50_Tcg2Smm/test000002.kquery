@@ -1,0 +1,4 @@
+array CommBufferSize[8] : w32 -> w8 = symbolic
+(query [(Ule 16
+              (ReadLSB w64 0 CommBufferSize))]
+        false)

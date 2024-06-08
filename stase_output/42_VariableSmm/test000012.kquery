@@ -1,0 +1,31 @@
+array CommBuffer->Function[4] : w32 -> w8 = symbolic
+array CommBufferSize[4] : w32 -> w8 = symbolic
+array mSmmMemLibInternalMaximumSupportAddress[8] : w32 -> w8 = symbolic
+(query [(Ule 8
+              N0:(ReadLSB w32 0 CommBufferSize))
+         (Eq false
+             (Ult 0 (Add w32 4294967288 N0)))
+         (Eq false
+             (Ult N1:(ReadLSB w64 0 mSmmMemLibInternalMaximumSupportAddress)
+                  N2:(ZExt w64 N0)))
+         (Eq false (Ult N1 121634816))
+         (Eq false
+             (Ult (Add w64 1 (Sub w64 N1 N2))
+                  121634816))
+         (Eq false
+             (Eq 1
+                 N3:(ReadLSB w32 0 CommBuffer->Function)))
+         (Eq false (Eq 2 N3))
+         (Eq false (Eq 3 N3))
+         (Eq false (Eq 4 N3))
+         (Eq false (Eq 5 N3))
+         (Eq false (Eq 6 N3))
+         (Eq false (Eq 7 N3))
+         (Eq false (Eq 8 N3))
+         (Eq false (Eq 9 N3))
+         (Eq false (Eq 10 N3))
+         (Eq false (Eq 11 N3))
+         (Eq false (Eq 12 N3))
+         (Eq false (Eq 13 N3))
+         (Eq false (Eq 14 N3))]
+        false)

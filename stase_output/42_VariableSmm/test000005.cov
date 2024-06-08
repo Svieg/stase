@@ -1,0 +1,5 @@
+./harness/../injected_edk2/injected_VariableSmm.c:962
+./edk2/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeCache.c:29
+./edk2/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeCache.c:33
+./edk2/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeCache.c:35
+./edk2/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeCache.c:37

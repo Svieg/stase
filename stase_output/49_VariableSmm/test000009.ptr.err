@@ -1,0 +1,18 @@
+Error: memory error: out of bound pointer
+File: ./edk2/MdePkg/Library/BaseMemoryLib/CopyMem.c
+Line: 52
+assembly.ll line: 9969
+State: 6
+Stack: 
+	#000009969 in InternalMemCopyMem(137190558400512, 137224918138888, 4294967288) at ./edk2/MdePkg/Library/BaseMemoryLib/CopyMem.c:52
+	#100009895 in CopyMem(137190558400512, 137224918138888, symbolic) at ./edk2/MdePkg/Library/BaseMemoryLib/CopyMemWrapper.c:58
+	#200015460 in SmmVariableHandler(12370169555311111083, 12370169555311111083, 137224918138880, 137156198662144) at ./dynamic_harness/../injected_edk2/injected_VariableSmm.c:518
+	#300019972 in verify_SmmVariableHandler() at ./dynamic_harness/VariableSmmHarness.c:31
+	#400019982 in __klee_posix_wrapped_main() at stase_driver.c:66
+	#500007422 in __user_main(1, 138119881949184, 138119881949200) at klee/runtime/POSIX/klee_init_env.c:245
+	#600000835 in __uClibc_main(138104035868672, 1, 138119881949184, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#700001000 in main(1, 138119881949184)
+Info: 
+	address: 137224918138888
+	next: object at 136865214627840 of size 1
+		MO7839[1] allocated at verify_SmmVariableHandler():  %5 = alloca i8, align 1

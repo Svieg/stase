@@ -1,0 +1,10 @@
+array *CommBufferSize[4] : w32 -> w8 = symbolic
+array SMRAM_BASE[4] : w32 -> w8 = symbolic
+array SMRAM_SIZE[4] : w32 -> w8 = symbolic
+(query [(Eq 40
+             (ReadLSB w32 0 *CommBufferSize))
+         (Eq false
+             (Ule 40
+                  (Add w32 (ReadLSB w32 0 SMRAM_BASE)
+                           (ReadLSB w32 0 SMRAM_SIZE))))]
+        false)

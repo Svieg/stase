@@ -1,0 +1,15 @@
+array CommBufferSize[4] : w32 -> w8 = symbolic
+array SMRAM_BASE[4] : w32 -> w8 = symbolic
+array SMRAM_SIZE[4] : w32 -> w8 = symbolic
+array command[4] : w32 -> w8 = symbolic
+(query [(Eq false
+             (Ult N0:(ZExt w64 N1:(ReadLSB w32 0 CommBufferSize))
+                  16))
+         (Eq 3
+             (ReadLSB w32 0 command))
+         (Eq false (Ult N0 48))
+         (Eq false
+             (Ule N1
+                  (Add w32 (ReadLSB w32 0 SMRAM_BASE)
+                           (ReadLSB w32 0 SMRAM_SIZE))))]
+        false)

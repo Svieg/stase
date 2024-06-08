@@ -1,0 +1,7 @@
+./dynamic_harness/../injected_edk2/injected_VariableSmm.c:505
+./dynamic_harness/../injected_edk2/injected_VariableSmm.c:506
+./dynamic_harness/../injected_edk2/injected_VariableSmm.c:508
+./dynamic_harness/../injected_edk2/injected_VariableSmm.c:516
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:142
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:165
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:237

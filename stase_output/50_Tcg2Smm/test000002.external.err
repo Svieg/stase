@@ -1,0 +1,12 @@
+Error: failed external call: FtwSmmIsBufferOutsideSmmValid
+File: ./edk2-master/MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteSmm.c
+Line: 335
+assembly.ll line: 10748
+State: 1
+Stack: 
+	#000010748 in SmmFaultTolerantWriteHandler(12370169555311111083, 12370169555311111083, 12370169555311111083, 94375186455432) at ./edk2-master/MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteSmm.c:335
+	#100011470 in DSE_to_SmmFaultTolerantWriteHandler() at ./Harness_SmmFaultTolerantWriteHandler.c:14
+	#200011477 in __klee_posix_wrapped_main() at klee_driver.c:80
+	#300007220 in __user_main(1, 94375149403648, 94375149403664) at klee/runtime/POSIX/klee_init_env.c:245
+	#400000633 in __uClibc_main(94375186451792, 1, 94375149403648, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#500000798 in main(1, 94375149403648)

@@ -1,0 +1,11 @@
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:57
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:58
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:61
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:62
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:67
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:68
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:69
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:70
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:98
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:400
+./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:401

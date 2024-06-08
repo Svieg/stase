@@ -1,0 +1,43 @@
+KLEE: WARNING: undefined reference to function: AllocateCopyPool
+KLEE: WARNING: undefined reference to function: AllocatePool
+KLEE: WARNING: undefined reference to function: AllocateZeroPool
+KLEE: WARNING: undefined reference to function: AsciiStrSize
+KLEE: WARNING: undefined reference to function: AsmCpuid
+KLEE: WARNING: undefined reference to function: CompareGuid
+KLEE: WARNING: undefined reference to function: CompareMem
+KLEE: WARNING: undefined reference to function: DebugAssert
+KLEE: WARNING: undefined reference to function: DebugCodeEnabled
+KLEE: WARNING: undefined reference to function: DebugPrint
+KLEE: WARNING: undefined reference to function: DebugPrintLevelEnabled
+KLEE: WARNING: undefined reference to function: DevicePathNodeLength
+KLEE: WARNING: undefined reference to function: DevicePathSubType
+KLEE: WARNING: undefined reference to function: EfiGetNameGuidFromFwVolDevicePathNode
+KLEE: WARNING: undefined reference to function: EfiGetSystemConfigurationTable
+KLEE: WARNING: undefined reference to function: EfiInitializeFwVolDevicepathNode
+KLEE: WARNING: undefined reference to function: FreePool
+KLEE: WARNING: undefined reference to function: GetDevicePathSize
+KLEE: WARNING: undefined reference to function: GetFirstHob
+KLEE: WARNING: undefined reference to function: InitializeListHead
+KLEE: WARNING: undefined reference to function: InsertTailList
+KLEE: WARNING: undefined reference to function: IsDevicePathEnd
+KLEE: WARNING: undefined reference to function: IsDevicePathEndType
+KLEE: WARNING: undefined reference to function: IsDevicePathValid
+KLEE: WARNING: undefined reference to function: Klee_assert
+KLEE: WARNING: undefined reference to function: LShiftU64
+KLEE: WARNING: undefined reference to function: MmMemLibInternalCalculateMaximumSupportAddress
+KLEE: WARNING: undefined reference to function: MmMemLibInternalFreeMmramRanges
+KLEE: WARNING: undefined reference to function: MmMemLibInternalPopulateMmramRanges
+KLEE: WARNING: undefined reference to function: NextDevicePathNode
+KLEE: WARNING: undefined reference to function: PeCoffLoaderGetPdbPointer
+KLEE: WARNING: undefined reference to function: RemoveEntryList
+KLEE: WARNING: undefined reference to function: SetDevicePathEndNode
+KLEE: WARNING: undefined reference to function: SetMem
+KLEE: WARNING: undefined reference to function: SmmInternalAllocatePool
+KLEE: WARNING: undefined reference to function: SmmInternalFreePool
+KLEE: WARNING: undefined reference to function: Tcg2PhysicalPresenceLibGetUserConfirmationStatusFunction
+KLEE: WARNING: undefined reference to function: Tcg2PhysicalPresenceLibReturnOperationResponseToOsFunction
+KLEE: WARNING: undefined reference to function: Tcg2PhysicalPresenceLibSubmitRequestToPreOSFunctionEx
+KLEE: WARNING: undefined reference to function: ZeroMem
+KLEE: WARNING ONCE: calling external: syscall(16, 0, 21505, 124736161972224) at klee/runtime/POSIX/fd.c:997 10
+KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
+KLEE: WARNING ONCE: calling __klee_posix_wrapped_main with extra arguments.

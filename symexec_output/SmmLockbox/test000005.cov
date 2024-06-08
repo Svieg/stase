@@ -1,0 +1,11 @@
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:114
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:115
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:116
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:119
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:125
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:132
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:139
+./edk2/MdePkg/Library/SmmMemLib/SmmMemLib.c:238
+./edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:298
+./edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:299
+./edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:300

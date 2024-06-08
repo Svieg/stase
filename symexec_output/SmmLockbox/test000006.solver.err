@@ -1,0 +1,11 @@
+Error: Query timed out (fork).
+File: ./edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c
+Line: 293
+assembly.ll line: 13028
+State: 209
+Stack: 
+	#000013028 in SmmLockBoxHandler(0, 0, symbolic, symbolic) at ./edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:293
+	#100013458 in __klee_posix_wrapped_main() at klee_driver.c:106
+	#200007289 in __user_main(1, 137321265496064, 137321265496080) at klee/runtime/POSIX/klee_init_env.c:245
+	#300000702 in __uClibc_main(137305419415552, 1, 137321265496064, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#400000867 in main(1, 137321265496064)

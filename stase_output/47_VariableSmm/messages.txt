@@ -1,0 +1,21 @@
+KLEE: Using Z3 solver backend
+KLEE: Logging queries that reach solver in .smt2 format to klee-out-11/solver-queries.smt2
+
+KLEE: Deterministic allocator: Using quarantine queue size 8
+KLEE: Deterministic allocator: globals (start-address=0x700fdf200000 size=10 GiB)
+KLEE: Deterministic allocator: constants (start-address=0x700d5f200000 size=10 GiB)
+KLEE: Deterministic allocator: heap (start-address=0x6f0d5f200000 size=1024 GiB)
+KLEE: Deterministic allocator: stack (start-address=0x6eed5f200000 size=128 GiB)
+KLEE: NOTE: found huge malloc, returning 0
+KLEE: ERROR: ./dynamic_harness/VariableSmmHarness.c:28: concretized symbolic size
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: ./dynamic_harness/VariableSmmHarness.c:29: memory error: invalid pointer: make_symbolic
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: ./dynamic_harness/../injected_edk2/injected_VariableSmm.c:781: ASSERTION FAIL: CommBufferPayloadSize <= mVariableBufferPayloadSize
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: ./dynamic_harness/../injected_edk2/injected_VariableSmm.c:681: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: ./dynamic_harness/../injected_edk2/injected_VariableSmm.c:979: memory error: null page access
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: ./edk2/MdePkg/Library/BaseMemoryLib/CopyMem.c:52: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location

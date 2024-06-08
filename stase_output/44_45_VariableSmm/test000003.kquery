@@ -1,0 +1,15 @@
+array CommBuffer->Function[4] : w32 -> w8 = symbolic
+array CommBufferSize[4] : w32 -> w8 = symbolic
+array mSmmMemLibInternalMaximumSupportAddress[8] : w32 -> w8 = symbolic
+array mVariableBufferPayloadSize[4] : w32 -> w8 = symbolic
+(query [(Eq 0
+             (ReadLSB w32 0 mVariableBufferPayloadSize))
+         (Eq false
+             (Ult N0:(ReadLSB w64 0 mSmmMemLibInternalMaximumSupportAddress)
+                  0))
+         (Eq false (Ult N0 3193962496))
+         (Eq 0
+             (ReadLSB w32 0 CommBufferSize))
+         (Eq 1
+             (ReadLSB w32 0 CommBuffer->Function))]
+        false)

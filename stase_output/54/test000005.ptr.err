@@ -1,0 +1,19 @@
+Error: memory error: null page access
+File: ./edk2/MdeModulePkg/Library/SmmLockBoxLib/SmmLockBoxDxeLib.c
+Line: 46
+assembly.ll line: 11549
+State: 9
+Stack: 
+	#000011549 in LockBoxGetSmmCommProtocol() at ./edk2/MdeModulePkg/Library/SmmLockBoxLib/SmmLockBoxDxeLib.c:46
+	#100012510 in RestoreAllLockBoxInPlace() at ./edk2/MdeModulePkg/Library/SmmLockBoxLib/SmmLockBoxDxeLib.c:516
+	#200014307 in SmmLockBoxRestoreAllInPlace(133461272690688) at ./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:263
+	#300014593 in SmmLockBoxHandler(0, 0, 133461272690688, 133392553213952) at ./dynamic_harness/../harden_edk2/MdeModulePkg/Universal/LockBox/SmmLockBox/SmmLockBox.c:432
+	#400014823 in verify_SmmLockBox() at ./dynamic_harness/SmmLockBoxHarness.c:31
+	#500014835 in __klee_posix_wrapped_main() at stase_driver.c:63
+	#600007351 in __user_main(1, 134356236500992, 134356236501008) at klee/runtime/POSIX/klee_init_env.c:245
+	#700000764 in __uClibc_main(134340390420480, 1, 134356236500992, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#800000929 in main(1, 134356236500992)
+Info: 
+	address: 320
+	next: object at 133110159114240 of size 4
+		MO7004[4] allocated at __user_main():  %4 = alloca i32, align 4

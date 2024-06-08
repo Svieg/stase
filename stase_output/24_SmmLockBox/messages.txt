@@ -1,0 +1,10 @@
+KLEE: Using Z3 solver backend
+KLEE: Logging queries that reach solver in .smt2 format to klee-out-28/solver-queries.smt2
+
+KLEE: Deterministic allocator: Using quarantine queue size 8
+KLEE: Deterministic allocator: globals (start-address=0x7f3767200000 size=10 GiB)
+KLEE: Deterministic allocator: constants (start-address=0x7f34e7200000 size=10 GiB)
+KLEE: Deterministic allocator: heap (start-address=0x7e34e7200000 size=1024 GiB)
+KLEE: Deterministic allocator: stack (start-address=0x7e14e7200000 size=128 GiB)
+KLEE: ERROR: ./harness/../injected_edk2/injected_SmmLockBox.c:150: ASSERTION FAIL: ((UINTN)CommBufferSize <= (SMRAM_BASE + SMRAM_SIZE)) && ((UINTN)LockBoxParameterUpdate <= (SMRAM_BASE + SMRAM_SIZE)) && (((UINTN)CommBufferSize == 0) || ((UINTN)LockBoxParameterUpdate <= ((SMRAM_BASE + SMRAM_SIZE) - CommBufferSize )))
+KLEE: NOTE: now ignoring this error at this location

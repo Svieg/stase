@@ -1,0 +1,23 @@
+/home/shafi/klee_build/bin/klee --external-calls=all -libc=uclibc --posix-runtime --smtlib-human-readable --write-test-info --write-paths --write-smt2s --write-cov --write-cvcs --write-kqueries --write-sym-paths --only-output-states-covering-new --use-query-log=solver:smt2 --simplify-sym-indices stase_driver.bc
+PID: 21651
+Using monotonic steady clock with 1/1000000000s resolution
+Started: 2024-04-08 14:28:58
+BEGIN searcher description
+<InterleavedSearcher> containing 2 searchers:
+RandomPathSearcher
+WeightedRandomSearcher::CoveringNew
+</InterleavedSearcher>
+END searcher description
+Finished: 2024-04-08 14:28:59
+Elapsed: 00:00:01
+KLEE: done: explored paths = 17
+KLEE: done: avg. constructs per query = 105
+KLEE: done: total queries = 16
+KLEE: done: valid queries = 1
+KLEE: done: invalid queries = 15
+KLEE: done: query cex = 16
+
+KLEE: done: total instructions = 15211
+KLEE: done: completed paths = 12
+KLEE: done: partially completed paths = 5
+KLEE: done: generated tests = 15

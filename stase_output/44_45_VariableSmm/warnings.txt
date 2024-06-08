@@ -1,0 +1,82 @@
+KLEE: WARNING: undefined reference to function: AllocateCopyPool
+KLEE: WARNING: undefined reference to function: AllocatePool
+KLEE: WARNING: undefined reference to function: AllocateRuntimePool
+KLEE: WARNING: undefined reference to function: AllocateRuntimeZeroPool
+KLEE: WARNING: undefined reference to function: AllocateZeroPool
+KLEE: WARNING: undefined reference to function: AsmCpuid
+KLEE: WARNING: undefined reference to function: CompareGuid
+KLEE: WARNING: undefined reference to function: CompareMem
+KLEE: WARNING: undefined reference to function: CopyGuid
+KLEE: WARNING: undefined reference to function: CreateBasicVariablePolicy
+KLEE: WARNING: undefined reference to function: DebugAssert
+KLEE: WARNING: undefined reference to function: DebugPrint
+KLEE: WARNING: undefined reference to function: DebugPrintLevelEnabled
+KLEE: WARNING: undefined reference to function: EfiGetSystemConfigurationTable
+KLEE: WARNING: undefined reference to function: GetEndPointer
+KLEE: WARNING: undefined reference to function: GetFirstHob
+KLEE: WARNING: undefined reference to function: GetFvbInfoByAddress
+KLEE: WARNING: undefined reference to function: GetMaxVariableSize
+KLEE: WARNING: undefined reference to function: GetVariableFlashNvStorageInfo
+KLEE: WARNING: undefined reference to function: GetVariableHeaderSize
+KLEE: WARNING: undefined reference to function: IsZeroGuid
+KLEE: WARNING: undefined reference to function: LShiftU64
+KLEE: WARNING: undefined reference to function: MmMemLibInternalCalculateMaximumSupportAddress
+KLEE: WARNING: undefined reference to function: MmMemLibInternalFreeMmramRanges
+KLEE: WARNING: undefined reference to function: MmMemLibInternalPopulateMmramRanges
+KLEE: WARNING: undefined reference to function: ReallocateRuntimePool
+KLEE: WARNING: undefined reference to function: ReclaimForOS
+KLEE: WARNING: undefined reference to function: SafeUint32Add
+KLEE: WARNING: undefined reference to function: SafeUint32Mult
+KLEE: WARNING: undefined reference to function: SafeUint64ToUint32
+KLEE: WARNING: undefined reference to function: SafeUintnAdd
+KLEE: WARNING: undefined reference to function: SetMem
+KLEE: WARNING: undefined reference to function: StrCmp
+KLEE: WARNING: undefined reference to function: StrCpyS
+KLEE: WARNING: undefined reference to function: StrLen
+KLEE: WARNING: undefined reference to function: StrSize
+KLEE: WARNING: undefined reference to function: StrnCmp
+KLEE: WARNING: undefined reference to function: StrnCpyS
+KLEE: WARNING: undefined reference to function: StrnLenS
+KLEE: WARNING: undefined reference to function: VarCheckRegisterSetVariableCheckHandler
+KLEE: WARNING: undefined reference to function: VarCheckVariablePropertyGet
+KLEE: WARNING: undefined reference to function: VarCheckVariablePropertySet
+KLEE: WARNING: undefined reference to function: VariableCommonInitialize
+KLEE: WARNING: undefined reference to function: VariablePolicyExtraDeinit
+KLEE: WARNING: undefined reference to function: VariablePolicyExtraInit
+KLEE: WARNING: undefined reference to function: VariableServiceGetNextVariableName
+KLEE: WARNING: undefined reference to function: VariableServiceGetVariable
+KLEE: WARNING: undefined reference to function: VariableServiceQueryVariableInfo
+KLEE: WARNING: undefined reference to function: VariableServiceSetVariable
+KLEE: WARNING: undefined reference to function: VariableSpeculationBarrier
+KLEE: WARNING: undefined reference to function: VariableWriteServiceInitialize
+KLEE: WARNING: undefined reference to function: ZeroMem
+KLEE: WARNING ONCE: calling external: syscall(16, 0, 21505, 125315307274240) at klee/runtime/POSIX/fd.c:997 10
+KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
+KLEE: WARNING ONCE: calling __klee_posix_wrapped_main with extra arguments.
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it
+KLEE: WARNING: unable to write output test case, losing it

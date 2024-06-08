@@ -1,0 +1,15 @@
+; Emited by klee::Z3SolverImpl::getConstraintLog()
+(set-info :status unknown)
+(declare-fun CommBufferSize_0 () (Array (_ BitVec 32) (_ BitVec 8)))
+(assert
+ (let ((?x8 (select CommBufferSize_0 (_ bv0 32))))
+ (let ((?x10 (select CommBufferSize_0 (_ bv1 32))))
+ (let ((?x11 (concat ?x10 ?x8)))
+ (let ((?x13 (select CommBufferSize_0 (_ bv2 32))))
+ (let ((?x14 (concat ?x13 ?x11)))
+ (let ((?x16 (select CommBufferSize_0 (_ bv3 32))))
+ (let ((?x17 (concat ?x16 ?x14)))
+ (= (_ bv40 32) ?x17)))))))))
+(assert
+ (not false))
+(check-sat)

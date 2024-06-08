@@ -1,0 +1,13 @@
+Error: ASSERTION FAIL: ((UINTN)CommBufferSize <= (SMRAM_BASE + SMRAM_SIZE)) && ((UINTN)LockBoxParameterRestore <= (SMRAM_BASE + SMRAM_SIZE)) && (((UINTN)CommBufferSize == 0) || ((UINTN)LockBoxParameterRestore <= ((SMRAM_BASE + SMRAM_SIZE) - CommBufferSize )))
+File: ./harness/../injected_edk2/injected_SmmLockBox.c
+Line: 198
+assembly.ll line: 13043
+State: 12
+Stack: 
+	#000013043 in SmmLockBoxRestore(2009071616) at ./harness/../injected_edk2/injected_SmmLockBox.c:198
+	#100013347 in SmmLockBoxHandler(0, 0, 128395761418240, 129284349886464) at ./harness/../injected_edk2/injected_SmmLockBox.c:337
+	#200013598 in verify_SmmLockBox() at ./harness/SmmLockBoxHarness.c:28
+	#300013613 in __klee_posix_wrapped_main() at stase_driver.c:183
+	#400007306 in __user_main(1, 129290725228544, 129290725228560) at klee/runtime/POSIX/klee_init_env.c:245
+	#500000719 in __uClibc_main(129274879148032, 1, 129290725228544, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#600000884 in main(1, 129290725228544)

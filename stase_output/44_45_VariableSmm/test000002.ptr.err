@@ -1,0 +1,15 @@
+Error: memory error: invalid pointer: make_symbolic
+File: ./dynamic_harness/VariableSmmHarness.c
+Line: 29
+assembly.ll line: 19974
+State: 2
+Stack: 
+	#000019974 in verify_SmmVariableHandler() at ./dynamic_harness/VariableSmmHarness.c:29
+	#100019990 in __klee_posix_wrapped_main() at stase_driver.c:66
+	#200007423 in __user_main(1, 126525951180800, 126525951180816) at klee/runtime/POSIX/klee_init_env.c:245
+	#300000836 in __uClibc_main(126510105100288, 1, 126525951180800, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#400001001 in main(1, 126525951180800)
+Info: 
+	address: 0
+	next: object at 125271283859456 of size 1
+		MO7840[1] allocated at verify_SmmVariableHandler():  %5 = alloca i8, align 1

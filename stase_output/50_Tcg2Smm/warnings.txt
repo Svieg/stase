@@ -1,0 +1,29 @@
+KLEE: WARNING: undefined reference to function: AllocateCopyPool
+KLEE: WARNING: undefined reference to function: AllocatePool
+KLEE: WARNING: undefined reference to function: AllocateZeroPool
+KLEE: WARNING: undefined reference to function: AsmCpuid
+KLEE: WARNING: undefined reference to function: CopyMem
+KLEE: WARNING: undefined reference to function: DebugAssert
+KLEE: WARNING: undefined reference to function: DebugAssertEnabled
+KLEE: WARNING: undefined reference to function: DebugPrint
+KLEE: WARNING: undefined reference to function: DebugPrintLevelEnabled
+KLEE: WARNING: undefined reference to function: EfiGetSystemConfigurationTable
+KLEE: WARNING: undefined reference to function: FreePool
+KLEE: WARNING: undefined reference to function: FtwAbort
+KLEE: WARNING: undefined reference to function: FtwAllocate
+KLEE: WARNING: undefined reference to function: FtwGetLastWrite
+KLEE: WARNING: undefined reference to function: FtwGetMaxBlockSize
+KLEE: WARNING: undefined reference to function: FtwNotifySmmReady
+KLEE: WARNING: undefined reference to function: FtwRestart
+KLEE: WARNING: undefined reference to function: FtwSmmIsBufferOutsideSmmValid
+KLEE: WARNING: undefined reference to function: FtwWrite
+KLEE: WARNING: undefined reference to function: GetFirstHob
+KLEE: WARNING: undefined reference to function: InitFtwDevice
+KLEE: WARNING: undefined reference to function: InitFtwProtocol
+KLEE: WARNING: undefined reference to function: LShiftU64
+KLEE: WARNING: undefined reference to function: SetMem
+KLEE: WARNING: undefined reference to function: SpeculationBarrier
+KLEE: WARNING ONCE: calling external: syscall(16, 0, 21505, 94375186996976) at klee/runtime/POSIX/fd.c:997 10
+KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
+KLEE: WARNING ONCE: calling __klee_posix_wrapped_main with extra arguments.
+KLEE: WARNING ONCE: calling external: FtwSmmIsBufferOutsideSmmValid(12370169555311111083, (ReadLSB w64 0 CommBufferSize)) at ./edk2-master/MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteSmm.c:335 8

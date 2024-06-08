@@ -1,0 +1,12 @@
+Error: ASSERTION FAIL: TempCommBufferSize >= SMM_VARIABLE_COMMUNICATE_HEADER_SIZE
+File: ./harness/../injected_edk2/injected_VariableSmm.c
+Line: 492
+assembly.ll line: 15380
+State: 2
+Stack: 
+	#000015380 in SmmVariableHandler(12370169555311111083, 12370169555311111083, 137211441840128, 137142722363392) at ./harness/../injected_edk2/injected_VariableSmm.c:492
+	#100019980 in verify_SmmVariableHandler() at ./harness/SmmVariableHandlerHarness.c:41
+	#200019990 in __klee_posix_wrapped_main() at stase_driver.c:194
+	#300007420 in __user_main(1, 138106405650432, 138106405650448) at klee/runtime/POSIX/klee_init_env.c:245
+	#400000833 in __uClibc_main(138090559569920, 1, 138106405650432, 0, 0, 0, 0) at libc/misc/internals/__uClibc_main.c:401
+	#500000998 in main(1, 138106405650432)
