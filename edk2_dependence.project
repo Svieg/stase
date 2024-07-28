@@ -1,6 +1,4 @@
 #include "/home/Downloads/cclyzerpp/cclyzerpp/datalog/debug.project"
-#include "/home/Downloads/testrules/utils/utils.dl"
-#include "/home/Downloads/testrules/utils/exports/utils-outputs.dl"
 
 .output subset.callgraph.reachable_load
 .output subset.callgraph.reachable_store
